@@ -24,13 +24,13 @@ typedef struct Agente{
     double p_infeccion;
     double p_morir;
     double p_curarse;
-    map *mapa;
+    struct map *mapa;
     int pos_x;
     int pos_y;
 } agent; 
 
-agent* crearAgente(int,char,char,double,double,double,map*,int,int);
-void* moverAgente(agent*);
+struct agent* crearAgente(int,char,char,double,double,double,struct map*,int,int);
+void* moverAgente(struct Agente*);
 
 #endif /* AGENTE_H */
 

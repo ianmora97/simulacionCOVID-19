@@ -19,12 +19,12 @@ typedef struct GruposAgentes{
     char estado;
 } g_agent;
 typedef struct NodoArchivo{
-    g_agent* ga;
-    nodoA* next;
+    struct GruposAgentes* ga;
+    struct NodoArchivo* next;
 } nodoA;
 
 typedef struct ListaArchivo {
-    nodoA* inicio;
+    struct NodoArchivo* inicio;
     int cant;
 } a_list;
 
@@ -37,9 +37,9 @@ int cantidadAgentes;
 
 
 /*Metodos de ListaArchivo*/
-a_list* crearLista();
-int insertarElemento(a_list* l, agent* item);
-bool listaVacia(a_list* l);
+struct ListaArchivo* crearListaA();
+int insertarElementoA(struct ListaArchivo* l, struct GruposAgentes* item);
+bool listaVaciaA(struct ListaArchivo* l);
 /*!Metodos de ListaArchivo*/
 
 void crearSimulacion(int,int);

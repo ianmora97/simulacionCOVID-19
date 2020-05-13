@@ -17,22 +17,23 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include "Agente.h"
 
 typedef struct Nodo{
-    agent* valor;
-    nodo* next;
+    struct agent* valor;
+    struct nodo* next;
 } nodo;
 
 typedef struct Lista {
-    nodo* inicio;
+    struct nodo* inicio;
     int cant;
 } list;
 
 list* crearLista();
-int insertarElemento(list* l, agent* item);
+int insertarElemento(list* l,struct agent* item);
 bool listaVacia(list* l);
-agent* borrarElemento(list* l, agent* item);
+struct agent* borrarElemento(list* l,struct agent* item);
 void borrarLista(list* l);
-agent* buscarElemento(list* l,int item);
+struct agent* buscarElemento(list* l,int item);
 #endif /* LISTA_H */
 

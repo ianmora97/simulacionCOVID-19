@@ -1,8 +1,8 @@
 #include "Agente.h"
 
-agent* crearAgente(int i,char t,char e,double pi,double pm,double pc, map* mapa, int px, int py){
-    agent* ag;
-    ag = malloc(sizeof(agent*));
+struct agent* crearAgente(int i,char t,char e,double pi,double pm,double pc,struct map* mapa, int px, int py){
+    struct Agente* ag;
+    ag = malloc(sizeof(struct agent*));
     ag->id = i;
     ag->estado = e;
     ag->tipo = t;
@@ -14,7 +14,7 @@ agent* crearAgente(int i,char t,char e,double pi,double pm,double pc, map* mapa,
     ag->pos_y = py;
     return ag;
 }
-void* moverAgente(agent* ag){
+void* moverAgente(struct Agente* ag){
     if(ag->tipo == 'A'){
         
     }
