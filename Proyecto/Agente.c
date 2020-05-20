@@ -32,7 +32,7 @@ struct Agente* crearAgente(int i, char t, char e, double pi, double pm, double p
 void* moverAgente(void* agente) {
     struct Agente* ag = (struct Agente*) agente;
     while (1) {
-        if ((ag->pos_x > 2 && ag->pos_x < ag->mapa->columnas) && (ag->pos_y > 2 && ag->pos_y < ag->mapa->fila)) {
+        //if ((ag->pos_x > 2 && ag->pos_x < ag->mapa->columnas) && (ag->pos_y > 2 && ag->pos_y < ag->mapa->fila)) {
             if (ag->tipo == 'A') {
 
             } else if (ag->tipo == 'R') { //rectos
@@ -40,7 +40,7 @@ void* moverAgente(void* agente) {
                     ag->mapa->mapaS[ag->pos_x][ag->pos_y] = 0;
                     usleep(1000000 * 10 / ag->vel);
                     dibujarMapa(ag->mapa);
-                    if (ag->pos_x + ag->dx == ag->mapa->fila) {
+                    if (ag->pos_x + ag->dx +2 == ag->mapa->fila) {
                         ag->dx = -1;
                         ag->dis = 2; //hacia arriba
                     }
@@ -51,7 +51,7 @@ void* moverAgente(void* agente) {
                     ag->mapa->mapaS[ag->pos_x][ag->pos_y] = 0;
                     usleep(1000000 * 10 / ag->vel);
                     dibujarMapa(ag->mapa);
-                    if (ag->pos_x + ag->dx == ag->mapa->fila) {
+                    if (ag->pos_x + ag->dx +2 == 0) {
                         ag->dx = 1;
                         ag->dis = 1; //hacia abajo
                     }
@@ -73,7 +73,7 @@ void* moverAgente(void* agente) {
                     ag->mapa->mapaS[ag->pos_x][ag->pos_y] = 0;
                     usleep(1000000 * 10 / ag->vel);
                     dibujarMapa(ag->mapa);
-                    if (ag->pos_y + ag->dy == ag->mapa->columnas) {
+                    if (ag->pos_y + ag->dy == 0) {
                         ag->dy = 1;
                         ag->dis = 3; //hacia derecha
                     }
@@ -89,5 +89,5 @@ void* moverAgente(void* agente) {
             }
         }
 
-    }
+    //}
 }

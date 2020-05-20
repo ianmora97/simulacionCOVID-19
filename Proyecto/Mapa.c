@@ -29,17 +29,19 @@ void dibujarMapa(struct Mapa* m) {
         for (int j = 0; j < m->columnas; j++) {
             if (m->mapaS[i][j] != 0) {
                 //attron(COLOR_PAIR(m->mapaS[i][j]));
-                move(i + 2, j * 3 + 2);
+                move(i , j );
                 addch('O');
                 /*
                                 mvprintw(i+2,j*3+2,"%i",m->mapaS[i][j]);
                  */
                 //attroff(COLOR_PAIR(m->mapaS[i][j]));
             }
+/*
             if (m->mapaS[i][j] == 0) {
                 move(i + 2, j * 3 + 2);
                 addch(' ');
             }
+*/
             refresh();
         }
     }

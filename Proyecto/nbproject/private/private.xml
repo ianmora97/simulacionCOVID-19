@@ -9,10 +9,13 @@
         <group>
             <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Mapa.c</file>
             <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Mapa.h</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Agente.h</file>
             <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Simulacion.c</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/tools.h</file>
             <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Simulacion.h</file>
             <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/main.c</file>
             <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Agente.c</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/tools.c</file>
         </group>
     </open-files>
 </project-private>

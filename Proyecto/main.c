@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     int op;
     scanf("%d",&op);
     initscr();
-    cbreak();
+    noecho();
     curs_set(0);
     system("clear");
     dibujarCuadro(f, c);
