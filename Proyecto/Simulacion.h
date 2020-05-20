@@ -7,43 +7,22 @@
 
 #ifndef SIMULACION_H
 #define SIMULACION_H
+#include <ncurses.h>
+#include <unistd.h>
+#include <pthread.h>
 #include "Mapa.h"
 #include "Agente.h"
 #include "Lista.h"
-/*Para leer Los archivos*/
-typedef struct GruposAgentes{
-    int cantAg;
-    int tipo;
-    int vel_max;
-    int vel_min;
-    char estado;
-} g_agent;
-typedef struct NodoArchivo{
-    struct GruposAgentes* ga;
-    struct NodoArchivo* next;
-} nodoA;
-
-typedef struct ListaArchivo {
-    struct NodoArchivo* inicio;
-    int cant;
-} a_list;
-
-/*!Para leer Los archivos!*/
 
 /* Variables del programa*/
-map* mapa;
+struct Mapa* mapa;
+pthread_t *ag_hilos;
 int cantidadAgentes;
+int cant_rectos, cant_estaticos; 
 
-
-
-/*Metodos de ListaArchivo*/
-struct ListaArchivo* crearListaA();
-int insertarElementoA(struct ListaArchivo* l, struct GruposAgentes* item);
-bool listaVaciaA(struct ListaArchivo* l);
-/*!Metodos de ListaArchivo*/
 
 void crearSimulacion(int,int);
-void run();
+void run(int time);
 void crearAgentes();
 #endif /* SIMULACION_H */
 

@@ -7,19 +7,20 @@
 
 void dibujarCuadro(int x, int y){   
     for(int i=0;i<y*3;i++, i++, i++){
-        gotoxy(i,1);printf("---");     
+        mvprintw(1,i,"---");     
     }
     for(int i=0;i<y*3;i++, i++, i++){
-        gotoxy(i,x+2);printf("---");
+        mvprintw(x+2,i,"---");
     }
     for(int i=1;i<=x+1;i++){
-        gotoxy(1,i);printf("|");
+        mvprintw(i,1,"|");
     }
     for(int i=1;i<=x+1;i++){
-        gotoxy(y*3,i);printf("|");
+        mvprintw(i,y*3,"|");
     }
-    gotoxy(1,1); printf("+");
-    gotoxy(x*3,1); printf("+");
-    gotoxy(1,y+2); printf("+");
-    gotoxy(x*3,y+2); printf("+");
+    mvprintw(1,1,"+");
+    mvprintw(1,x*3,"+");
+    mvprintw(y+2,1,"+");
+    mvprintw(y+2,x*3,"+");
+    refresh();
 }

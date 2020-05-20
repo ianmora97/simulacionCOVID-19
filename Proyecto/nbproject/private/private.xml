@@ -7,15 +7,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ian/Desktop/prueba/main.c</file>
-            <file>file:/home/ian/Desktop/prueba/tools.h</file>
-            <file>file:/home/ian/Desktop/prueba/Mapa.c</file>
-            <file>file:/home/ian/Desktop/prueba/Mapa.h</file>
-            <file>file:/home/ian/Desktop/prueba/tools.c</file>
-            <file>file:/home/ian/Desktop/prueba/Simulacion.c</file>
-            <file>file:/home/ian/Desktop/prueba/Agente.c</file>
-            <file>file:/home/ian/Desktop/prueba/Agente.h</file>
-            <file>file:/home/ian/Desktop/prueba/Simulacion.h</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Mapa.c</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Mapa.h</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Simulacion.c</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Simulacion.h</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/main.c</file>
+            <file>file:/home/ian/Desktop/simulacionCOVID-19/Proyecto/Agente.c</file>
         </group>
     </open-files>
 </project-private>

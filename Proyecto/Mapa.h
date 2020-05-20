@@ -15,17 +15,20 @@
 #define MAPA_H
 #include <stdio.h>
 #include <stdlib.h>
+#include <ncurses.h>
+#include <unistd.h>
 #include "Lista.h"
-#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
-typedef struct Mapa{
+
+struct Mapa {
     int tam;
     int fila;
     int columnas;
     int **mapaS;
-    struct list* agentes;
-} map;
-map* crearMapa(int,int);
-void dibujarMapa(map*);
+};
+typedef struct Mapa map;
+
+struct Mapa* crearMapa(int,int);
+void dibujarMapa(struct Mapa*);
 
 #endif /* MAPA_H */
 

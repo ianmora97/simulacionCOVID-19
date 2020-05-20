@@ -44,7 +44,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-lncurses -lpthread
 
 # CC Compiler Flags
 CCFLAGS=
@@ -57,7 +57,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lcurses -ldl -lpthread
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -65,7 +65,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto ${OBJECTFILES} ${LDLIBSOPTIONS} -lncurses -lpthread
 
 ${OBJECTDIR}/Agente.o: Agente.c
 	${MKDIR} -p ${OBJECTDIR}

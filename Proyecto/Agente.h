@@ -16,21 +16,26 @@
 #include "Mapa.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct Agente{
+#include <ncurses.h>
+#include <unistd.h>
+struct Agente{
     int id;
     char tipo;
     char estado;
     double p_infeccion;
     double p_morir;
     double p_curarse;
-    struct map *mapa;
+    struct Mapa* mapa;
     int pos_x;
     int pos_y;
-} agent; 
+    int dx,dy;
+    int dis;
+    int vel;
+};
+typedef struct Agente agent; 
 
-struct agent* crearAgente(int,char,char,double,double,double,struct map*,int,int);
-void* moverAgente(struct Agente*);
+struct Agente* crearAgente(int,char,char,double,double,double,struct Mapa*,int,int);
+void* moverAgente(void* agente);
 
 #endif /* AGENTE_H */
 
