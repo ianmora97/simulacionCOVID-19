@@ -7,8 +7,8 @@
 
 void dibujarCuadro(int x, int y){
     start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    attron(COLOR_PAIR(1));
+    init_pair(7, COLOR_BLACK, 15);
+    attron(COLOR_PAIR(7));
     for(int i=1;i<y*3;i++, i++, i++){
         move(1,i);
         addch(ACS_HLINE);
@@ -26,21 +26,23 @@ void dibujarCuadro(int x, int y){
         addch(ACS_HLINE);
     }
     for(int i=1;i<=x+1;i++){
-        move(i,1);
+        move(i,y*3+1);
         addch(ACS_VLINE);
     }
     for(int i=1;i<=x+1;i++){
-        move(i,y*3);
+        move(i,1);
         addch(ACS_VLINE);
     }
+    
     move(1,1);
     addch(ACS_ULCORNER);
-    move(1,x*3);
+    move(1,x*3+1);
     addch(ACS_URCORNER);
     move(y+2,1);
     addch(ACS_LLCORNER);
-    move(y+2,x*3);
+    move(y+2,x*3+1);
     addch(ACS_LRCORNER);
-    attroff(COLOR_PAIR(1));
-    refresh();
+    attroff(COLOR_PAIR(7));
+    
 }
+

@@ -9,9 +9,9 @@
 void crearSimulacion(int filas,int columnas){
     mapa = crearMapa(filas,columnas);
     
-    cant_rectos = 0;
-    cant_estaticos = 10;
-    cant_aleatorios = 25;
+    cant_rectos = 20;
+    cant_estaticos = 20;
+    cant_aleatorios = 20;
     cantidadAgentes = 0;
     
     ag_hilos = malloc(filas * columnas *sizeof(pthread_t)*20);
@@ -32,7 +32,7 @@ void crearAgentes(){
     for(int i=0;i<cant_estaticos;i++){
         int dx = (3+rand()% mapa->fila -3),dy = (3+ rand()%  mapa->columnas -3 );
         struct Agente *ag;
-        ag=crearAgente(2,'Q','V',0.0,0.0,0.0,mapa,dx,dy);
+         ag=crearAgente(2,'Q','V',0.0,0.0,0.0,mapa,dx,dy);
         mapa->mapaS[dx][dy] = 2; //1 rectos
 
     }

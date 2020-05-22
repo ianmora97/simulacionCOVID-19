@@ -204,6 +204,7 @@ void* moverAgente(void* agente) {
         } else { //
             //doNothing
         }
+        usleep(500000 * 10/ag->vel);
     }
 
     //}

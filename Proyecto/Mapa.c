@@ -32,28 +32,27 @@ struct Mapa* crearMapa(int f, int c) {
 
 void dibujarMapa(struct Mapa* m) {
     start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLUE);
-    init_pair(2, COLOR_WHITE, COLOR_GREEN);
-    init_pair(3, COLOR_WHITE, COLOR_MAGENTA);
-    init_pair(4, COLOR_WHITE, COLOR_RED);
-    init_pair(5, COLOR_WHITE, COLOR_WHITE);
+    init_pair(1, 8, 15);
+    init_pair(2, 10, 15);
+    init_pair(3, 8, 15);
+    init_pair(4, 12, 15);
+    init_pair(5, 15, 15);
+
+    
     for (int i = 0; i < m->fila; i++) {
         for (int j = 0; j < m->columnas; j++) {
             if (m->mapaS[i][j] != 0) {
-                attron(COLOR_PAIR(m->mapaS[i][j]));
+                attron(COLOR_PAIR(m->mapaS[i][j]) | A_BOLD);
                 move(i + 2, j * 3 + 2);
                 addch(ACS_DIAMOND);
-                attroff(COLOR_PAIR(m->mapaS[i][j]));
+                attroff(COLOR_PAIR(m->mapaS[i][j]) | A_BOLD);
             }
             if (m->mapaS[i][j] == 0) {
+                attron(COLOR_PAIR(5));
                 move(i + 2, j * 3 + 2);
                 addch(' ');
+                attroff(COLOR_PAIR(5));
             }
-            
-            pthread_mutex_lock(&m->lockRefresh);
-            
-            refresh();
-            pthread_mutex_unlock(&m->lockRefresh);
         }
     }
 }
