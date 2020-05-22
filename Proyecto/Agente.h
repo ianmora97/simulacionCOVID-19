@@ -36,6 +36,7 @@ typedef struct Agente agent;
 
 struct Agente* crearAgente(int,char,char,double,double,double,struct Mapa*,int,int);
 void* moverAgente(void* agente);
+bool checkCollision(struct Agente*);
 
 #endif /* AGENTE_H */
 

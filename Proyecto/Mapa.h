@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "Lista.h"
 
 struct Mapa {
@@ -24,6 +25,8 @@ struct Mapa {
     int fila;
     int columnas;
     int **mapaS;
+    pthread_mutex_t **mapa_pos_mutex;
+    pthread_mutex_t lockRefresh;
 };
 typedef struct Mapa map;
 

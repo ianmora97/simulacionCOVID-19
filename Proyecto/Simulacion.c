@@ -9,10 +9,11 @@
 void crearSimulacion(int filas,int columnas){
     mapa = crearMapa(filas,columnas);
     
-    cant_rectos=2;
-    cant_estaticos=8;
+    cant_rectos=5;
+    cant_estaticos=30;
     cantidadAgentes = 0;
-    ag_hilos = malloc(filas * columnas *sizeof(pthread_t));
+    
+    ag_hilos = malloc(filas * columnas *sizeof(pthread_t)*2);
 }
 
 void run(int time){

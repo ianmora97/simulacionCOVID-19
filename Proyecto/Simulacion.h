@@ -19,7 +19,7 @@ struct Mapa* mapa;
 pthread_t *ag_hilos;
 int cantidadAgentes;
 int cant_rectos, cant_estaticos; 
-
+int *dir_x, *dir_y;
 
 void crearSimulacion(int,int);
 void run(int time);

@@ -5,22 +5,42 @@
  */
 #include "tools.h"
 
-void dibujarCuadro(int x, int y){   
-    for(int i=0;i<y*3;i++, i++, i++){
-        mvprintw(1,i,"---");     
+void dibujarCuadro(int x, int y){
+    start_color();
+    init_pair(1, COLOR_WHITE, COLOR_BLACK);
+    attron(COLOR_PAIR(1));
+    for(int i=1;i<y*3;i++, i++, i++){
+        move(1,i);
+        addch(ACS_HLINE);
+        move(1,i+1);
+        addch(ACS_HLINE);
+        move(1,i+2);
+        addch(ACS_HLINE);
     }
-    for(int i=0;i<y*3;i++, i++, i++){
-        mvprintw(x+2,i,"---");
+    for(int i=1;i<y*3;i++, i++, i++){
+        move(x+2,i);
+        addch(ACS_HLINE);
+        move(x+2,i+1);
+        addch(ACS_HLINE);
+        move(x+2,i+2);
+        addch(ACS_HLINE);
     }
     for(int i=1;i<=x+1;i++){
-        mvprintw(i,1,"|");
+        move(i,1);
+        addch(ACS_VLINE);
     }
     for(int i=1;i<=x+1;i++){
-        mvprintw(i,y*3,"|");
+        move(i,y*3);
+        addch(ACS_VLINE);
     }
-    mvprintw(1,1,"+");
-    mvprintw(1,x*3,"+");
-    mvprintw(y+2,1,"+");
-    mvprintw(y+2,x*3,"+");
+    move(1,1);
+    addch(ACS_ULCORNER);
+    move(1,x*3);
+    addch(ACS_URCORNER);
+    move(y+2,1);
+    addch(ACS_LLCORNER);
+    move(y+2,x*3);
+    addch(ACS_LRCORNER);
+    attroff(COLOR_PAIR(1));
     refresh();
 }
