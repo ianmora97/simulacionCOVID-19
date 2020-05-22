@@ -35,7 +35,7 @@ void dibujarMapa(struct Mapa* m) {
     init_pair(1, COLOR_WHITE, COLOR_BLUE);
     init_pair(2, COLOR_WHITE, COLOR_GREEN);
     init_pair(3, COLOR_WHITE, COLOR_MAGENTA);
-    init_pair(4, COLOR_WHITE, COLOR_GREEN);
+    init_pair(4, COLOR_WHITE, COLOR_RED);
     init_pair(5, COLOR_WHITE, COLOR_WHITE);
     for (int i = 0; i < m->fila; i++) {
         for (int j = 0; j < m->columnas; j++) {

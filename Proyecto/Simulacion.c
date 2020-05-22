@@ -9,11 +9,12 @@
 void crearSimulacion(int filas,int columnas){
     mapa = crearMapa(filas,columnas);
     
-    cant_rectos=5;
-    cant_estaticos=30;
+    cant_rectos = 0;
+    cant_estaticos = 10;
+    cant_aleatorios = 25;
     cantidadAgentes = 0;
     
-    ag_hilos = malloc(filas * columnas *sizeof(pthread_t)*2);
+    ag_hilos = malloc(filas * columnas *sizeof(pthread_t)*20);
 }
 
 void run(int time){
@@ -34,6 +35,13 @@ void crearAgentes(){
         ag=crearAgente(2,'Q','V',0.0,0.0,0.0,mapa,dx,dy);
         mapa->mapaS[dx][dy] = 2; //1 rectos
 
+    }
+    for(int i=0;i<cant_aleatorios;i++){
+        int dx = (3+rand()% mapa->fila -3);
+        int dy = (3+ rand()%  mapa->columnas -3 );
+        struct Agente *ag= crearAgente(3,'A','V', 0.0, 0.0 ,0.0 ,mapa,dx,dy);
+        mapa->mapaS[dx][dy] = 3; //3 aleatorios
+        pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,moverAgente,ag);
     }
     for(int i=0;i<(cantidadAgentes);i++){
         pthread_join(ag_hilos[i],NULL);
