@@ -14,6 +14,7 @@
 #ifndef AGENTE_H
 #define AGENTE_H
 #include "Mapa.h"
+#include "tools.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
@@ -29,7 +30,7 @@ struct Agente{
     int pos_x;
     int pos_y;
     int dx,dy;
-    int dis;
+    int dis;//direccion
     int vel;
 };
 typedef struct Agente agent; 

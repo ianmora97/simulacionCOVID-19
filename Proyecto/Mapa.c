@@ -15,9 +15,9 @@ struct Mapa* crearMapa(int f, int c) {
     for (int i = 0; i < f; i++) {
         m->mapa_pos_mutex[i] = malloc(c * sizeof (int)*10);
     }
-    for(int i=0;i<f;i++){
-        for(int j=0;j<c;j++){
-            pthread_mutex_init(&m->mapa_pos_mutex[i][j],NULL);
+    for (int i = 0; i < f; i++) {
+        for (int j = 0; j < c; j++) {
+            pthread_mutex_init(&m->mapa_pos_mutex[i][j], NULL);
         }
     }
     for (int i = 0; i < m->fila; i++) {
@@ -26,19 +26,11 @@ struct Mapa* crearMapa(int f, int c) {
             m->mapaS[i][j] = 0;
         }
     }
-    pthread_mutex_init(&m->lockRefresh,NULL);
+    pthread_mutex_init(&m->lockRefresh, NULL);
     return m;
 }
 
 void dibujarMapa(struct Mapa* m) {
-    start_color();
-    init_pair(1, 8, 15);
-    init_pair(2, 10, 15);
-    init_pair(3, 8, 15);
-    init_pair(4, 12, 15);
-    init_pair(5, 15, 15);
-
-    
     for (int i = 0; i < m->fila; i++) {
         for (int j = 0; j < m->columnas; j++) {
             if (m->mapaS[i][j] != 0) {
@@ -46,8 +38,7 @@ void dibujarMapa(struct Mapa* m) {
                 move(i + 2, j * 3 + 2);
                 addch(ACS_DIAMOND);
                 attroff(COLOR_PAIR(m->mapaS[i][j]) | A_BOLD);
-            }
-            if (m->mapaS[i][j] == 0) {
+            }else if (m->mapaS[i][j] == 0) {
                 attron(COLOR_PAIR(5));
                 move(i + 2, j * 3 + 2);
                 addch(' ');
@@ -55,4 +46,5 @@ void dibujarMapa(struct Mapa* m) {
             }
         }
     }
+    //dibujarCuadro(m->fila, m->columnas);
 }

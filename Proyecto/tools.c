@@ -6,9 +6,8 @@
 #include "tools.h"
 
 void dibujarCuadro(int x, int y){
-    start_color();
-    init_pair(7, COLOR_BLACK, 15);
-    attron(COLOR_PAIR(7));
+    
+    attron(COLOR_PAIR(8));
     for(int i=1;i<y*3;i++, i++, i++){
         move(1,i);
         addch(ACS_HLINE);
@@ -42,7 +41,7 @@ void dibujarCuadro(int x, int y){
     addch(ACS_LLCORNER);
     move(y+2,x*3+1);
     addch(ACS_LRCORNER);
-    attroff(COLOR_PAIR(7));
+    attroff(COLOR_PAIR(8));
     
 }
 
