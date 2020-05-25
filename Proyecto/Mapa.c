@@ -3,17 +3,17 @@
 
 struct Mapa* crearMapa(int f, int c) {
     struct Mapa* m;
-    m = malloc(sizeof (struct Mapa*));
+    m = malloc(sizeof (struct Mapa*)*50);
     m->fila = f;
     m->columnas = c;
     m->tam = f*c;
-    m->mapaS = malloc(f * sizeof (int *)*10);
+    m->mapaS = malloc(f * sizeof (int *)*20);
     for (int i = 0; i < f; i++) {
-        m->mapaS[i] = malloc(c * sizeof (int)*10);
+        m->mapaS[i] = malloc(c * sizeof (int)*20);
     }
-    m->mapa_pos_mutex = malloc(f * sizeof (int *)*10);
+    m->mapa_pos_mutex = malloc(f * sizeof (int *)*20);
     for (int i = 0; i < f; i++) {
-        m->mapa_pos_mutex[i] = malloc(c * sizeof (int)*10);
+        m->mapa_pos_mutex[i] = malloc(c * sizeof (int)*20);
     }
     for (int i = 0; i < f; i++) {
         for (int j = 0; j < c; j++) {

@@ -18,11 +18,12 @@
 struct Mapa* mapa;
 pthread_t *ag_hilos;
 int cantidadAgentes;
-int cant_rectos, cant_estaticos, cant_aleatorios; 
+int cant_rectos, cant_estaticos, cant_aleatorios,cant_estacionales; 
 int *dir_x, *dir_y;
 
 void crearSimulacion(int,int);
+void crearParedes(int, int*);
 void run(int time);
-void crearAgentes();
+void crearAgentes(int,int,int,int, int*,int*,int*,char*);
 #endif /* SIMULACION_H */
 
