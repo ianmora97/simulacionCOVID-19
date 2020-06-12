@@ -11,7 +11,7 @@
 void* refrescar() {
     while (1) {
         refresh();
-        usleep(100000);
+        usleep(50000);
     }
 }
 
@@ -35,6 +35,9 @@ int main(int argc, char** argv) {
         fputs("Archivo no encontrado!", stderr);
         exit(1);
     }
+    else{
+        printf("Archivo abierto\n");
+    }
 
     fscanf(fichero, "%d %d\n", &f, &c);
     fscanf(fichero, "%d\n", &cant_paredes);
@@ -50,7 +53,10 @@ int main(int argc, char** argv) {
         fputs("Archivo no encontrado!", stderr);
         exit(1);
     }
-
+    else{
+        printf("Archivo abierto\n");
+    }
+    
     int cont_grupos=0, cont_tipos=0, cont_vel=0, cont_estados=0;
     cont = 0;
     fscanf(fichero, "%d\n", &cant_paredes);
@@ -66,6 +72,8 @@ int main(int argc, char** argv) {
     }
     fclose(fichero);
 
+    printf("%i, %i, %i, %i ",cont_grupos,cont_tipos,cont_vel,cont_estados);
+    
     initscr();
     start_color();
     init_pair(1, 10, COLOR_BLACK); //sano
@@ -78,8 +86,11 @@ int main(int argc, char** argv) {
     init_pair(7, 9, COLOR_BLACK);
     init_pair(8, 9, COLOR_BLACK);
 
-    init_pair(8, 15, COLOR_BLACK);
-    init_pair(9, 15, 15);
+    init_pair(9, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(10, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(11, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(12, COLOR_YELLOW, COLOR_BLACK);
+    
     //bkgd(COLOR_PAIR(9));
     noecho();
     curs_set(0);
@@ -92,15 +103,17 @@ int main(int argc, char** argv) {
         refresh();
     }
     clear();
-    crearAgentes(cont_grupos, cont_tipos, cont_vel, cont_estados,ca,ta,vel,es);
+    
     refresh();
     pthread_t update;
     pthread_create(&update, NULL, refrescar, NULL);
     pthread_t clear_t;
     pthread_create(&clear_t, NULL, cleanS, NULL);
-    //bkgd(COLOR_PAIR(9));
+
+    
 
     crearSimulacion(f, c);
+    crearAgentes(cont_grupos, cont_tipos, cont_vel, cont_estados,ca,ta,vel,es);
     dibujarCuadro(f, c);
     
     pthread_join(update, NULL);

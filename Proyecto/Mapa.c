@@ -27,6 +27,10 @@ struct Mapa* crearMapa(int f, int c) {
         }
     }
     pthread_mutex_init(&m->lockRefresh, NULL);
+    m->contadorEnfermos=0;
+    m->contadorSanos=0;
+    m->contadorCurados=0;
+    m->contadorMuertos=0;
     return m;
 }
 

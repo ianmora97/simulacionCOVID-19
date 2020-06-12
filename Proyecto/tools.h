@@ -20,7 +20,7 @@
 #define ENFERMO 'e'
 #define CURADO 'c'
 #define MUERTO 'm'
-#define VIVO 'v'
+#define SANO 's'
 
 void dibujarCuadro(int,int);
 

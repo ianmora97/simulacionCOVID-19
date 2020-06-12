@@ -27,6 +27,7 @@ struct Mapa {
     int **mapaS;
     pthread_mutex_t **mapa_pos_mutex;
     pthread_mutex_t lockRefresh;
+    int contadorEnfermos,contadorSanos,contadorCurados,contadorMuertos;
 };
 typedef struct Mapa map;
 

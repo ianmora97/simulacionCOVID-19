@@ -2,7 +2,7 @@
 
 struct Agente* crearAgente(int i, char t, char e, double pi, double pm, double pc, struct Mapa* ma, int px, int py) {
     struct Agente* ag;
-    ag = malloc(sizeof (struct Agente*)*50);
+    ag = malloc(sizeof (struct Agente*)*500);
     ag->id = i;
     ag->estado = e;
     ag->tipo = t;
@@ -31,18 +31,47 @@ struct Agente* crearAgente(int i, char t, char e, double pi, double pm, double p
 
 void* moverAgente(void* agente) {
     struct Agente* ag = (struct Agente*) agente;
-    int ant_x, ant_y;
+    int dx_r = 0, dy_r = 0;
+    if (ag->tipo == 'E') {
+        ag->dis = 1;
+    }
+
+    int pos = 0;
+    int dx_pos[10]; //para las posiciones del agente de ruta
+    int dy_pos[10];
+    for (int i = 0; i < 10; i++) {
+        dx_pos[i] = rand() % 2;
+    }
+    for (int i = 0; i < 10; i++) {
+        dy_pos[i] = rand() % 2;
+    }
+    int ant_x, ant_y; //posicion anterior, al que hay que poner en 0
     while (1) {
         //if ((ag->pos_x > 2 && ag->pos_x < ag->mapa->columnas) && (ag->pos_y > 2 && ag->pos_y < ag->mapa->fila)) {
         if (ag->tipo == 'A') {
-            int r_dx = random() % 6; //genero una probabilidad de cambio de direccion para x y y
-            int r_dy = random() % 6;
+            ant_x = ag->pos_x;
+            ant_y = ag->pos_y;
+            int r_dx = random() % 5; //genero una probabilidad de cambio de direccion para x y y
+            int r_dy = random() % 5;
 
-            if (r_dx == 2) { //si cae lo cambio
+            if (r_dx == 2) { //si la probabilidad es 2 lo cambio
                 ag->dx = ag->dx == 1 ? -1 : 1;
             }
             if (r_dy == 2) {
                 ag->dy = ag->dy == 1 ? -1 : 1;
+            }
+
+            switch (ag->dx) {
+                case 1:ag->dis = 1;
+                    break;
+                case -1:ag->dis = 2;
+                    break;
+            }
+            switch (ag->dy) {
+                case 1:ag->dis = 3;
+                    break;
+                case -1:ag->dis = 4;
+                    break;
             }
 
             if (ag->pos_y + ag->dy == ag->mapa->columnas) { //si al cambiarlo toca los extremos cambia la direccion
@@ -56,33 +85,19 @@ void* moverAgente(void* agente) {
                 ag->dx = 1;
             }
 
-            ant_x = ag->pos_x;
-            ant_y = ag->pos_y;
-            switch (ag->dx) {
-                case 1:ag->dis = 1;
-                    break;
-                case -1:ag->dis = 2;
-                    break;
-            }
-            switch (ag->dy) {
-                case 1:ag->dis = 3;
-                    break;
-                case -1:ag->dis = 4;
-                    break;
-            }
-            if (checkCollision(ag)) {
-                pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
-                if (ag->mapa->mapaS[ant_x][ant_y] != 2) {
-                    ag->mapa->mapaS[ant_x][ant_y] = 0;
-                }
-                pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
-            } else {
+            if (!checkCollision(ag)) {
                 ag->pos_x += ag->dx;
                 ag->pos_y += ag->dy;
                 pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
                 ag->mapa->mapaS[ag->pos_x][ag->pos_y] = ag->id;
                 pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
 
+                pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
+                if (ag->mapa->mapaS[ant_x][ant_y] != 2) {
+                    ag->mapa->mapaS[ant_x][ant_y] = 0;
+                }
+                pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
+            } else {
                 pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
                 if (ag->mapa->mapaS[ant_x][ant_y] != 2) {
                     ag->mapa->mapaS[ant_x][ant_y] = 0;
@@ -105,8 +120,6 @@ void* moverAgente(void* agente) {
                 }
 
                 if (checkCollision(ag)) {
-
-
                     pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
                     if (ag->mapa->mapaS[ant_x][ant_y] != 2) {
                         ag->mapa->mapaS[ant_x][ant_y] = 0;
@@ -147,8 +160,6 @@ void* moverAgente(void* agente) {
                     }
                     pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
                 } else {
-
-
                     pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
                     if (ag->mapa->mapaS[ant_x][ant_y] != 2) {
                         ag->mapa->mapaS[ant_x][ant_y] = 0;
@@ -218,6 +229,72 @@ void* moverAgente(void* agente) {
 
 
         } else if (ag->tipo == 'E') {
+            if (ag->pos_y + ag->dy == ag->mapa->columnas) { //si al cambiarlo toca los extremos cambia la direccion
+                dy_r = 9;
+                dx_r = 9;
+            } else if (ag->pos_y + ag->dy == 0) {
+                dy_r = 0;
+                dx_r = 0;
+            }
+            if (ag->pos_x + ag->dx == ag->mapa->fila) {
+                dy_r = 9;
+                dx_r = 9;
+            } else if (ag->pos_x + ag->dx == 0) {
+                dy_r = 0;
+                dx_r = 0;
+            }
+            if (ag->dis) { //dis =1 para arriba derecha
+                pos = 1;
+                ag->dx = dx_pos[dx_r++];
+                ag->dy = dy_pos[dy_r++];
+                if (dx_r == 10) {
+                    ag->dis = 0;
+                    dx_r--;
+                    dy_r--;
+                }
+                ant_x = ag->pos_x;
+                ant_y = ag->pos_y;
+
+                ag->pos_x += ag->dx;
+                ag->pos_y += ag->dy;
+
+                pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
+                ag->mapa->mapaS[ag->pos_x][ag->pos_y] = ag->id;
+                pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
+
+                pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
+                if (ag->mapa->mapaS[ant_x][ant_y] != 2) {
+                    ag->mapa->mapaS[ant_x][ant_y] = 0;
+                }
+                pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
+            } else { //dis = 0 para abajo izquierda
+                pos = -1;
+                ag->dx = dx_pos[dx_r--] * -1;
+                ag->dy = dy_pos[dy_r--] * -1;
+                if (dx_r == -1) {
+                    ag->dis = 1;
+                    dx_r++;
+                    dy_r++;
+                }
+                ant_x = ag->pos_x;
+                ant_y = ag->pos_y;
+
+                ag->pos_x += ag->dx;
+                ag->pos_y += ag->dy;
+
+                pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
+                ag->mapa->mapaS[ag->pos_x][ag->pos_y] = ag->id;
+                pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
+
+                pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
+                if (ag->mapa->mapaS[ant_x][ant_y] != 2) {
+                    ag->mapa->mapaS[ant_x][ant_y] = 0;
+                }
+                pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
+            }
+
+
+
 
         }
         usleep(500000 * 10 / ag->vel);
@@ -237,17 +314,52 @@ void *checkEstaticos(void* agente) {
     }
 }
 
+void* p_muerte(void *agente) {
+    struct Agente* ag = (struct Agente*) agente;
+    int time = 0;
+    int numeroMantiza = rand() % 100;
+    int numeroExponente = rand() % 10;
+    double p = numeroMantiza + numeroExponente * 0.1;
+    if (ag->p_morir + p > 100) {
+        time = 20; //se muere
+    } else { 
+        time = 18; //se cura
+    }
+    for (int i = 0; i < time; i++) {
+        usleep(1000000);
+    }
+    if(ag->tipo == 'R'){
+        if(time == 20){
+            ag->id = 0;
+        }
+        else{
+            ag->id = 9;
+        }
+    }
+}
+void *generarReporte(void *agente){
+   struct Agente* ag = (struct Agente*) agente;
+   while(1){
+       if(ag->estado == CURADO){
+           
+       }
+   }
+}
+
 bool checkCollision(struct Agente* ag) {
-    if (ag->id == 1 || ag->id == 5) { //recto
+    if (ag->id == 1 || ag->id == 5 || ag->id == 9) { //recto
         if (ag->dis == 1 || ag->dis == 2) {
             if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] != 0) {
                 int numeroMantiza = rand() % 100;
                 int numeroExponente = rand() % 10;
                 double p = numeroMantiza + numeroExponente * 0.1;
-                if (ag->p_infeccion > p) {
+                if (ag->p_infeccion > p) { //SE ENFERMA
                     if ((ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 5 ||
                             ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 7 ||
                             ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 8) && ag->id == 1) {
+                        pthread_t probabilidadMuerte;
+                        pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
+                        pthread_join(probabilidadMuerte, NULL);
                         ag->estado = ENFERMO;
                         pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x + ag->dx][ag->pos_y]);
                         ag->id = 5;
@@ -268,11 +380,14 @@ bool checkCollision(struct Agente* ag) {
                 int numeroMantiza = rand() % 100;
                 int numeroExponente = rand() % 10;
                 double p = numeroMantiza + numeroExponente * 0.1;
-                if (ag->p_infeccion > p) {
+                if (ag->p_infeccion > p) { //SE ENFERMA
                     if ((ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 5 ||
                             ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 7 ||
                             ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 8) && ag->id == 1) {
                         ag->estado = 'i';
+                        pthread_t probabilidadMuerte;
+                        pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
+                        pthread_join(probabilidadMuerte, NULL);
                         pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y + ag->dy]);
                         ag->id = 5;
                         pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y + ag->dy]);
@@ -291,45 +406,38 @@ bool checkCollision(struct Agente* ag) {
 
     } else if (ag->id == 3 || ag->id == 7) { //aleatorio
         if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] != 0) {
-
-            int numeroMantiza = rand() % 100;
-            int numeroExponente = rand() % 10;
-            double p = numeroMantiza + numeroExponente * 0.1;
-            if (ag->p_infeccion > p) {
-                if ((ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 5 ||
-                        ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 7 ||
-                        ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 8)) {
+            if ((ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 5 ||
+                    ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 7 ||
+                    ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 8)) {
+                int numeroMantiza = rand() % 100;
+                int numeroExponente = rand() % 10;
+                double p = numeroMantiza + numeroExponente * 0.1;
+                if (ag->p_infeccion > p) {
                     if (ag->id == 3) {
+                        pthread_t probabilidadMuerte;
+                        pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
+                        pthread_join(probabilidadMuerte, NULL);
                         ag->estado = ENFERMO;
                         pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x + ag->dx][ag->pos_y]);
                         ag->id = 7;
                         pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x + ag->dx][ag->pos_y]);
-
                     }
                 }
 
             }
-            ag->dy = 1;
-            if (ag->pos_y + ag->dy == ag->mapa->columnas) { //si al cambiarlo toca los extremos cambia la direccion
-                ag->dy = -1;
-            } else if (ag->pos_y + ag->dy == 0) {
-                ag->dy = 1;
-            }
-            if (ag->pos_x + ag->dx == ag->mapa->fila) {
-                ag->dx = -1;
-            } else if (ag->pos_x + ag->dx == 0) {
-                ag->dx = 1;
-            }
             return true;
         } else if (ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->pos_y] != 0) {
-            int numeroMantiza = rand() % 100;
-            int numeroExponente = rand() % 10;
-            double p = numeroMantiza + numeroExponente * 0.1;
-            if (ag->p_infeccion > p) {
-                if ((ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 5 ||
-                        ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 7 ||
-                        ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 8)) {
+            if ((ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 5 ||
+                    ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 7 ||
+                    ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 8)) {
+                int numeroMantiza = rand() % 100;
+                int numeroExponente = rand() % 10;
+                double p = numeroMantiza + numeroExponente * 0.1;
+                if (ag->p_infeccion > p) {
                     if (ag->id == 3) {
+                        pthread_t probabilidadMuerte;
+                        pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
+                        pthread_join(probabilidadMuerte, NULL);
                         ag->estado = ENFERMO;
                         pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y + ag->dy]);
                         ag->id = 7;
@@ -337,17 +445,6 @@ bool checkCollision(struct Agente* ag) {
                     }
                 }
 
-            }
-            ag->dx = 1;
-            if (ag->pos_y + ag->dy == ag->mapa->columnas) { //si al cambiarlo toca los extremos cambia la direccion
-                ag->dy = -1;
-            } else if (ag->pos_y + ag->dy == 0) {
-                ag->dy = 1;
-            }
-            if (ag->pos_x + ag->dx == ag->mapa->fila) {
-                ag->dx = -1;
-            } else if (ag->pos_x + ag->dx == 0) {
-                ag->dx = 1;
             }
             return true;
         }
@@ -358,27 +455,34 @@ bool checkCollision(struct Agente* ag) {
             int numeroMantiza = rand() % 100;
             int numeroExponente = rand() % 10;
             double p = numeroMantiza + numeroExponente * 0.1;
-            if (ag->p_infeccion > p) {
+            if (ag->p_infeccion > p) { //SE ENFERMA
                 if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 5 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 7 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 8) {
                     ag->estado = ENFERMO;
+                    pthread_t probabilidadMuerte;
+                    pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
+                    pthread_join(probabilidadMuerte, NULL);
                     pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
                     ag->id = 6;
                     pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
-                }
-                else if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 5 ||
+                } else if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 5 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 7 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 8) {
                     ag->estado = ENFERMO;
+                    pthread_t probabilidadMuerte;
+                    pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
+                    pthread_join(probabilidadMuerte, NULL);
                     pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
                     ag->id = 6;
                     pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
-                }
-                else if (ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 5 ||
+                } else if (ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 5 ||
                         ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 7 ||
                         ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 8) {
                     ag->estado = ENFERMO;
+                    pthread_t probabilidadMuerte;
+                    pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
+                    pthread_join(probabilidadMuerte, NULL);
                     pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
                     ag->id = 6;
                     pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
