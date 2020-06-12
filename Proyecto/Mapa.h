@@ -26,8 +26,10 @@ struct Mapa {
     int columnas;
     int **mapaS;
     pthread_mutex_t **mapa_pos_mutex;
-    pthread_mutex_t lockRefresh;
+    bool re_contagio;
     int contadorEnfermos,contadorSanos,contadorCurados,contadorMuertos;
+    double p_muerte;
+    int segundosMorir, segundosCurarse; 
 };
 typedef struct Mapa map;
 

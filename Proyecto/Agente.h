@@ -32,10 +32,11 @@ struct Agente{
     int dx,dy;
     int dis;//direccion
     int vel;
+    int placa;
 };
 typedef struct Agente agent; 
 
-struct Agente* crearAgente(int,char,char,double,double,double,struct Mapa*,int,int);
+struct Agente* crearAgente(int,char,char,double,double,double,struct Mapa*,int,int,int);
 void* moverAgente(void* agente);
 void *checkEstaticos(void* agente);
 bool checkCollision(struct Agente*);

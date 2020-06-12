@@ -28,8 +28,37 @@ int main(int argc, char** argv) {
     int f, c, cant_paredes, cont = 0;
     int *v,*ca,*ta,*vel;
     char *es;
-
+    
+    double p_muerte=0.0;
+    int segundosMorir, segundosCurarse;
+    
     FILE* fichero;
+    fichero = fopen("fichero3", "r");
+    if (fichero == NULL) {
+        fputs("Archivo no encontrado!", stderr);
+        exit(1);
+    }
+    else{
+        printf("Archivo abierto\n");
+    }
+    double lectura;
+    fscanf(fichero, "%lf\n", &p_muerte); //probabilidad de muerte
+    fscanf(fichero, "%d\n", &segundosMorir); //segundos de persona en morir
+    fscanf(fichero, "%d\n", &segundosCurarse); //segundos de persona en curarse
+    double matrizContagio[4][4];
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            fscanf(fichero, "%lf ", &lectura);
+            matrizContagio[i][j] = lectura;
+        }
+        fscanf(fichero, " \n");
+    }
+    int reContagio = 0;
+    fscanf(fichero, "%d",&reContagio);
+    fclose(fichero);
+    
+    //----------------------------------------------PRIMER ARCHIVO--------------------------
+    
     fichero = fopen("fichero", "r");
     if (fichero == NULL) {
         fputs("Archivo no encontrado!", stderr);
@@ -73,7 +102,7 @@ int main(int argc, char** argv) {
     fclose(fichero);
 
     printf("%i, %i, %i, %i ",cont_grupos,cont_tipos,cont_vel,cont_estados);
-    
+    crearSimulacion(f, c,matrizContagio,p_muerte,segundosCurarse,segundosMorir,(bool)reContagio);
     initscr();
     start_color();
     init_pair(1, 10, COLOR_BLACK); //sano
@@ -112,7 +141,7 @@ int main(int argc, char** argv) {
 
     
 
-    crearSimulacion(f, c);
+    
     crearAgentes(cont_grupos, cont_tipos, cont_vel, cont_estados,ca,ta,vel,es);
     dibujarCuadro(f, c);
     

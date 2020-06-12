@@ -6,7 +6,7 @@
 
 #include "Simulacion.h"
 
-void crearSimulacion(int filas,int columnas){
+void crearSimulacion(int filas,int columnas,int **m_pro,int p_muerte, int t_curarse,int t_morir,bool recontagio){
     mapa = crearMapa(filas,columnas);
     
     cant_rectos = 0;
@@ -20,7 +20,15 @@ void crearSimulacion(int filas,int columnas){
     cant_estacionales_e = 0;
     
     cantidadAgentes = 0;
-    
+    mapa->re_contagio = recontagio;
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            matriz[i][j] = m_pro[i][j];
+        }
+    }
+    mapa->segundosCurarse = t_curarse;
+    mapa->segundosMorir = t_morir;
+    mapa->p_muerte = p_muerte;
     ag_hilos = malloc(filas * columnas *sizeof(pthread_t)*500);
 }
 
@@ -80,7 +88,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
                 ban = false;
             }
         }
-        struct Agente *ag= crearAgente(1,'R','v', 99.5, 99.5 ,99.0 ,mapa,dx,dy);
+        struct Agente *ag= crearAgente(1,'R',SANO, matriz[0][0], mapa->p_muerte ,50.0 ,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 1; //1 rectos sanos
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,moverAgente,ag);
         move(5,60+1); addch('R');
@@ -98,7 +106,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
                 ban = false;
             }
         }
-        struct Agente *ag= crearAgente(5,'R','e', 99.5, 99.5 ,99.0 ,mapa,dx,dy);
+        struct Agente *ag= crearAgente(5,'R',ENFERMO, matriz[0][0], mapa->p_muerte ,50.0 ,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 5; //5 rectos enfermos
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,moverAgente,ag);
         move(6,60+1); addch('R');
@@ -116,7 +124,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
             }
         }
         struct Agente *ag;
-        ag=crearAgente(2,'Q','v',99.0,99.0,99.0,mapa,dx,dy);
+        ag=crearAgente(2,'Q',SANO,matriz[0][1],mapa->p_muerte,50.0,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 2; //1 rectos
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,checkEstaticos,ag);
         move(7,60+1); addch('Q');
@@ -134,7 +142,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
             }
         }
         struct Agente *ag;
-        ag=crearAgente(6,'Q','e',99.0,99.0,99.0,mapa,dx,dy);
+        ag=crearAgente(6,'Q',ENFERMO,matriz[0][1],mapa->p_muerte,50.0,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 6; //1 rectos
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,checkEstaticos,ag);
         move(7,60+1); addch('Q');
@@ -151,7 +159,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
                 ban = false;
             }
         }
-        struct Agente *ag= crearAgente(3,'A','v', 99.0, 99.0 ,99.0 ,mapa,dx,dy);
+        struct Agente *ag= crearAgente(3,'A',SANO, matriz[0][2], mapa->p_muerte ,50.0 ,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 3; //3 aleatorios
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,moverAgente,ag);
         move(8,60+1); addch('A');
@@ -168,7 +176,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
                 ban = false;
             }
         }
-        struct Agente *ag= crearAgente(7,'A','v', 99.0, 99.0 ,99.0 ,mapa,dx,dy);
+        struct Agente *ag= crearAgente(7,'A',ENFERMO, matriz[0][2], mapa->p_muerte ,50.0 ,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 7; //7 aleatorios
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,moverAgente,ag);
         move(8,60+1); addch('A');
@@ -185,7 +193,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
                 ban = false;
             }
         }
-        struct Agente *ag= crearAgente(4,'E','v', 99.0, 99.0 ,99.0 ,mapa,dx,dy);
+        struct Agente *ag= crearAgente(4,'E',SANO, matriz[0][3], mapa->p_muerte ,50.0 ,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 4; //3 aleatorios
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,moverAgente,ag);
         move(8,60+1); addch('A');
@@ -202,7 +210,7 @@ void crearAgentes(int cont_grupos,int cont_tipos,int cont_vel,int cont_est, int*
                 ban = false;
             }
         }
-        struct Agente *ag= crearAgente(8,'E','v', 99.0, 99.0 ,99.0 ,mapa,dx,dy);
+        struct Agente *ag= crearAgente(8,'E',ENFERMO, matriz[0][3], mapa->p_muerte ,50.0 ,mapa,dx,dy,cantidadAgentes+1);
         mapa->mapaS[dx][dy] = 8; //7 aleatorios
         pthread_create(&(ag_hilos[cantidadAgentes++]),NULL,moverAgente,ag);
         move(8,60+1); addch('A');

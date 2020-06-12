@@ -1,6 +1,6 @@
 #include "Agente.h"
 
-struct Agente* crearAgente(int i, char t, char e, double pi, double pm, double pc, struct Mapa* ma, int px, int py) {
+struct Agente* crearAgente(int i, char t, char e, double pi, double pm, double pc, struct Mapa* ma, int px, int py, int placa) {
     struct Agente* ag;
     ag = malloc(sizeof (struct Agente*)*500);
     ag->id = i;
@@ -26,6 +26,7 @@ struct Agente* crearAgente(int i, char t, char e, double pi, double pm, double p
             break;
     }
     ag->vel = (5 + rand() % 50);
+    ag->placa = placa;
     return ag;
 }
 
@@ -322,28 +323,41 @@ void* p_muerte(void *agente) {
     double p = numeroMantiza + numeroExponente * 0.1;
     if (ag->p_morir + p > 100) {
         time = 20; //se muere
-    } else { 
+    } else {
         time = 18; //se cura
     }
     for (int i = 0; i < time; i++) {
         usleep(1000000);
     }
-    if(ag->tipo == 'R'){
-        if(time == 20){
+    if (ag->tipo == 'R') {
+        if (time == 20) {
             ag->id = 0;
-        }
-        else{
+            ag->estado = MUERTO;
+        } else {
+            ag->estado = CURADO;
             ag->id = 9;
         }
     }
+    generarReporte(ag);
 }
-void *generarReporte(void *agente){
-   struct Agente* ag = (struct Agente*) agente;
-   while(1){
-       if(ag->estado == CURADO){
-           
-       }
-   }
+
+void *generarReporte(void *agente) {
+    struct Agente* ag = (struct Agente*) agente;
+    switch (ag->estado) {
+        case CURADO:
+            ag->mapa->contadorCurados++;
+            break;
+        case ENFERMO:
+            ag->mapa->contadorEnfermos++;
+            break;
+        case MUERTO:
+            ag->mapa->contadorMuertos++;
+            break;
+        case SANO:
+            ag->mapa->contadorSanos++;
+            break;
+    }
+    usleep(1000);
 }
 
 bool checkCollision(struct Agente* ag) {
@@ -361,6 +375,7 @@ bool checkCollision(struct Agente* ag) {
                         pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
                         pthread_join(probabilidadMuerte, NULL);
                         ag->estado = ENFERMO;
+                        generarReporte(ag);
                         pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x + ag->dx][ag->pos_y]);
                         ag->id = 5;
                         pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x + ag->dx][ag->pos_y]);
@@ -384,7 +399,8 @@ bool checkCollision(struct Agente* ag) {
                     if ((ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 5 ||
                             ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 7 ||
                             ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 8) && ag->id == 1) {
-                        ag->estado = 'i';
+                        ag->estado = ENFERMO;
+                        generarReporte(ag);
                         pthread_t probabilidadMuerte;
                         pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
                         pthread_join(probabilidadMuerte, NULL);
@@ -418,6 +434,7 @@ bool checkCollision(struct Agente* ag) {
                         pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
                         pthread_join(probabilidadMuerte, NULL);
                         ag->estado = ENFERMO;
+                        generarReporte(ag);
                         pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x + ag->dx][ag->pos_y]);
                         ag->id = 7;
                         pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x + ag->dx][ag->pos_y]);
@@ -439,6 +456,7 @@ bool checkCollision(struct Agente* ag) {
                         pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
                         pthread_join(probabilidadMuerte, NULL);
                         ag->estado = ENFERMO;
+                        generarReporte(ag);
                         pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y + ag->dy]);
                         ag->id = 7;
                         pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y + ag->dy]);
@@ -460,6 +478,7 @@ bool checkCollision(struct Agente* ag) {
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 7 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 8) {
                     ag->estado = ENFERMO;
+                    generarReporte(ag);
                     pthread_t probabilidadMuerte;
                     pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
                     pthread_join(probabilidadMuerte, NULL);
@@ -470,6 +489,7 @@ bool checkCollision(struct Agente* ag) {
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 7 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 8) {
                     ag->estado = ENFERMO;
+                    generarReporte(ag);
                     pthread_t probabilidadMuerte;
                     pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
                     pthread_join(probabilidadMuerte, NULL);
@@ -480,6 +500,7 @@ bool checkCollision(struct Agente* ag) {
                         ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 7 ||
                         ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 8) {
                     ag->estado = ENFERMO;
+                    generarReporte(ag);
                     pthread_t probabilidadMuerte;
                     pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
                     pthread_join(probabilidadMuerte, NULL);

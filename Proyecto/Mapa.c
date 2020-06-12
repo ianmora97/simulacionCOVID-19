@@ -26,7 +26,7 @@ struct Mapa* crearMapa(int f, int c) {
             m->mapaS[i][j] = 0;
         }
     }
-    pthread_mutex_init(&m->lockRefresh, NULL);
+    m->re_contagio = true;
     m->contadorEnfermos=0;
     m->contadorSanos=0;
     m->contadorCurados=0;
