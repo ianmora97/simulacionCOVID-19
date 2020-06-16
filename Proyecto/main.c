@@ -8,6 +8,17 @@
 #include "Simulacion.h"
 #include "tools.h"
 
+struct Par{
+    int f,c;
+};
+
+void* printChart(void* in){
+    while(1){
+        dibujarCuadro(((struct Par*)in)->f, ((struct Par*)in)->c);
+        usleep(1010000);
+    }
+}
+
 void* refrescar() {
     while (1) {
         refresh();
@@ -102,7 +113,7 @@ int main(int argc, char** argv) {
     fclose(fichero);
 
     printf("%i, %i, %i, %i ",cont_grupos,cont_tipos,cont_vel,cont_estados);
-    crearSimulacion(f, c,matrizContagio,p_muerte,segundosCurarse,segundosMorir,(bool)reContagio);
+    
     initscr();
     start_color();
     init_pair(1, 10, COLOR_BLACK); //sano
@@ -132,21 +143,25 @@ int main(int argc, char** argv) {
         refresh();
     }
     clear();
-    
+    struct Par *par = (struct Par*)malloc(sizeof(struct Par));
+    par->f = f;
+    par->c = c;
     refresh();
     pthread_t update;
     pthread_create(&update, NULL, refrescar, NULL);
     pthread_t clear_t;
     pthread_create(&clear_t, NULL, cleanS, NULL);
-
+    pthread_t pCh;
+    pthread_create(&pCh,NULL,printChart,(void*)par);
     
-
     
+    crearSimulacion(f, c,matrizContagio,p_muerte,segundosCurarse,segundosMorir,(bool)reContagio);
     crearAgentes(cont_grupos, cont_tipos, cont_vel, cont_estados,ca,ta,vel,es);
-    dibujarCuadro(f, c);
+    
     
     pthread_join(update, NULL);
     pthread_join(clear_t, NULL);
+    pthread_join(pCh, NULL);
     getch();
     endwin();
     return (EXIT_SUCCESS);

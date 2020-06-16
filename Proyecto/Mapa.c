@@ -3,7 +3,7 @@
 
 struct Mapa* crearMapa(int f, int c) {
     struct Mapa* m;
-    m = malloc(sizeof (struct Mapa*)*50);
+    m = malloc(sizeof (struct Mapa*)*500);
     m->fila = f;
     m->columnas = c;
     m->tam = f*c;
