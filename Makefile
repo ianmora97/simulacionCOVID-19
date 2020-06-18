@@ -11,8 +11,8 @@ all: run clean
 $(EXEC): $(CFILES) $(HEADERS)
 	$(CC) $(CFILES) $(COPTIONS)
 
-.PHONY: clean run
+.PHONY: clean ru 
 
-run: $(EXEC)
+run: $(EXEC) 
 	./$(EXEC)
 
