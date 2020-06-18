@@ -32,11 +32,13 @@ void* cleanS() {
         usleep(1000000);
     }
 }
-
-int main(int argc, char** argv) {
+int charToInt(char c){
+   return c - '0';
+}
+int main(int argc, char* argv[]) {
     int tiempo=60;
-    if(argc == 1){
-        tiempo = (int)argv[0]; 
+    if(argc){
+        tiempo = atoi(argv[1]); 
     }
     srand(time(0));
     int f, c, cant_paredes, cont = 0;
@@ -137,6 +139,7 @@ int main(int argc, char** argv) {
     //bkgd(COLOR_PAIR(9));
     noecho();
     curs_set(0);
+    mvprintw(5,5,"%i",tiempo);
     for (int i = 0; i < 10; i++) {
         attron(COLOR_PAIR(1));
         move(6, 6 + i);

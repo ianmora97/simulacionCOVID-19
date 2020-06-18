@@ -1,18 +1,15 @@
 EXEC = main
 CFILES = main.c Agente.c Mapa.c Lista.c Simulacion.c tools.c
-CFILES := $(addprefix Proyecto/,$(CFILES))
+CFILES := $(CFILES)
 HEADERS = Agente.h Mapa.h Lista.h Simulacion.h tools.h
-HEADERS := $(addprefix Proyecto/,$(HEADERS))
+HEADERS := $(HEADERS)
 CC = gcc
-COPTIONS = -o $(EXEC) -lncurses -lpthread -lm
-
-all: run clean
+COPTIONS = -o $(EXEC) -w -lncurses -lpthread -lm
 
 $(EXEC): $(CFILES) $(HEADERS)
 	$(CC) $(CFILES) $(COPTIONS)
 
-.PHONY: clean ru 
+.PHONY: clean run
 
-run: $(EXEC) 
-	./$(EXEC)
+run: $(EXEC)
 

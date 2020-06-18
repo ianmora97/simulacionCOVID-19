@@ -244,7 +244,7 @@ void* moverAgente(void* agente) {
                 dy_r = 0;
                 dx_r = 0;
             }
-            
+
             if (ag->dis) { //dis =1 para arriba derecha
                 pos = 1;
                 ag->dx = dx_pos[dx_r++];
@@ -292,6 +292,10 @@ void* moverAgente(void* agente) {
                 }
                 pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
             }
+
+
+
+
         }
         usleep(500000 * 10 / ag->vel);
         dibujarMapa(ag->mapa);
@@ -332,6 +336,30 @@ void* p_muerte(void *agente) {
             ag->estado = CURADO;
             ag->id = 9;
         }
+    } else if (ag->tipo == 'Q') {
+        if (time == 20) {
+            ag->id = 0;
+            ag->estado = MUERTO;
+        } else {
+            ag->estado = CURADO;
+            ag->id = 10;
+        }
+    } else if (ag->tipo == 'A') {
+        if (time == 20) {
+            ag->id = 0;
+            ag->estado = MUERTO;
+        } else {
+            ag->estado = CURADO;
+            ag->id = 11;
+        }
+    } else if (ag->tipo == 'E') {
+        if (time == 20) {
+            ag->id = 0;
+            ag->estado = MUERTO;
+        } else {
+            ag->estado = CURADO;
+            ag->id = 12;
+        }
     }
     generarReporte(ag);
 }
@@ -340,16 +368,28 @@ void *generarReporte(void *agente) {
     struct Agente* ag = (struct Agente*) agente;
     switch (ag->estado) {
         case CURADO:
-            ag->mapa->contadorCurados++;
+            ag->mapa->v_cu[ag->mapa->contadorCurados++] = 1;
+            ag->mapa->v_en[ag->mapa->contadorEnfermos++] = 0;
+            ag->mapa->v_sa[ag->mapa->contadorSanos++] = 0;
+            ag->mapa->v_mu[ag->mapa->contadorMuertos++] = 0;
             break;
         case ENFERMO:
-            ag->mapa->contadorEnfermos++;
+            ag->mapa->v_en[ag->mapa->contadorEnfermos++] = 1;
+            ag->mapa->v_sa[ag->mapa->contadorSanos++] = 0;
+            ag->mapa->v_cu[ag->mapa->contadorCurados++] = 0;
+            ag->mapa->v_mu[ag->mapa->contadorMuertos++] = 0;
             break;
         case MUERTO:
-            ag->mapa->contadorMuertos++;
+            ag->mapa->v_mu[ag->mapa->contadorMuertos++] = 1;
+            ag->mapa->v_en[ag->mapa->contadorEnfermos++] = 0;
+            ag->mapa->v_sa[ag->mapa->contadorSanos++] = 0;
+            ag->mapa->v_cu[ag->mapa->contadorCurados++] = 0;
             break;
         case SANO:
-            ag->mapa->contadorSanos++;
+            ag->mapa->v_sa[ag->mapa->contadorSanos++] = 1;
+            ag->mapa->v_cu[ag->mapa->contadorCurados++] = 0;
+            ag->mapa->v_mu[ag->mapa->contadorMuertos++] = 0;
+            ag->mapa->v_en[ag->mapa->contadorEnfermos++] = 0;
             break;
     }
     usleep(100000);
@@ -435,7 +475,7 @@ bool checkCollision(struct Agente* ag) {
                 return true;
 
             }
-            
+
         } else if (ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->pos_y] != 0) {
             if ((ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 5 ||
                     ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] == 7 ||
@@ -459,24 +499,13 @@ bool checkCollision(struct Agente* ag) {
             return true;
         }
     } else if (ag->id == 2) {
-        if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] != 0 ||
-                ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] != 0 ||
-                ag->mapa->mapaS[ag->pos_x][ag->pos_y + ag->dy] != 0) {
+        if (ag->mapa->mapaS[ag->pos_x + 1][ag->pos_y] != 0 ||
+                ag->mapa->mapaS[ag->pos_x][ag->pos_y + 1] != 0) {
             int numeroMantiza = rand() % 100;
             int numeroExponente = rand() % 10;
             double p = numeroMantiza + numeroExponente * 0.1;
             if (ag->p_infeccion > p) { //SE ENFERMA
-                if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 5 ||
-                        ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 7 ||
-                        ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y + ag->dy] == 8) {
-                    ag->estado = ENFERMO;
-                    pthread_t probabilidadMuerte;
-                    pthread_create(&probabilidadMuerte, NULL, p_muerte, ag);
-                    pthread_join(probabilidadMuerte, NULL);
-                    pthread_mutex_lock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
-                    ag->id = 6;
-                    pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ag->pos_x][ag->pos_y]);
-                } else if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 5 ||
+                if (ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 5 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 7 ||
                         ag->mapa->mapaS[ag->pos_x + ag->dx][ag->pos_y] == 8) {
                     ag->estado = ENFERMO;

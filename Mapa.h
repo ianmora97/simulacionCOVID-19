@@ -28,6 +28,7 @@ struct Mapa {
     pthread_mutex_t **mapa_pos_mutex;
     bool re_contagio;
     int contadorEnfermos,contadorSanos,contadorCurados,contadorMuertos;
+    int *v_en, *v_sa, *v_cu, *v_mu;
     double p_muerte;
     int segundosMorir, segundosCurarse; 
 };

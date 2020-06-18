@@ -27,10 +27,20 @@ struct Mapa* crearMapa(int f, int c) {
         }
     }
     m->re_contagio = true;
-    m->contadorEnfermos=0;
-    m->contadorSanos=0;
-    m->contadorCurados=0;
-    m->contadorMuertos=0;
+    m->contadorEnfermos = 0;
+    m->contadorSanos = 0;
+    m->contadorCurados = 0;
+    m->contadorMuertos = 0;
+    m->v_en = malloc(f * sizeof (int)*20);
+    m->v_sa = malloc(f * sizeof (int)*20);
+    m->v_cu = malloc(f * sizeof (int)*20);
+    m->v_mu = malloc(f * sizeof (int)*20);
+    for(int i=0;i<f*20;i++){
+        m->v_en[i] = 0;
+        m->v_sa[i] = 0;
+        m->v_cu[i] = 0;
+        m->v_mu[i] = 0;
+    }
     return m;
 }
 
@@ -42,7 +52,7 @@ void dibujarMapa(struct Mapa* m) {
                 move(i + 2, j * 3 + 2);
                 addch(ACS_DIAMOND);
                 attroff(COLOR_PAIR(m->mapaS[i][j]) | A_BOLD);
-            }else if (m->mapaS[i][j] == 0) {
+            } else if (m->mapaS[i][j] == 0) {
                 attron(COLOR_PAIR(5));
                 move(i + 2, j * 3 + 2);
                 addch(' ');

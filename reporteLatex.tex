@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage{array,booktabs}
+\usepackage{csvsimple}
+\usepackage{pgfplots}
+
+\begin{document}
+
+%----------------------------------------------------------
+\section{Tabla Generada a partir de la simulacion}
+
+{\small
+\csvautotabular{simulacionPrint.csv}}
+
+\section{Grafico de Agentes Sanos}
+\begin{tikzpicture}
+\begin{axis}[
+    width=1\textwidth,
+    height=1\textwidth,
+    title={Agentes Sanos},
+    xlabel={Tiempo en segundos},
+    ylabel={Cantidad de Agentes Sanos},
+    xmin=0, xmax=100,
+    ymin=0, ymax=2,
+    xtick={0,20,40,60,80,100},
+    ytick={0,1,2},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+\addplot table [x=Tiempo, y=Sanos, col sep=comma] {simulacionPrint.csv};
+\end{axis}
+\end{tikzpicture}
+
+\section{Grafico de Agentes Enfermos}
+\begin{tikzpicture}
+\begin{axis}[
+    width=1\textwidth,
+    height=1\textwidth,
+    title={Agentes Enfermos},
+    xlabel={Tiempo en segundos},
+    ylabel={Cantidad de Agentes Enfermos},
+    xmin=0, xmax=100,
+    ymin=0, ymax=2,
+    xtick={0,20,40,60,80,100},
+    ytick={0,1,2},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+\addplot table [x=Tiempo, y=Enfermos, col sep=comma] {simulacionPrint.csv};
+\end{axis}
+\end{tikzpicture}
+
+\section{Grafico de Agentes Curados}
+\begin{tikzpicture}
+\begin{axis}[
+    width=1\textwidth,
+    height=1\textwidth,
+    title={Agentes Curados},
+    xlabel={Tiempo en segundos},
+    ylabel={Cantidad de Agentes Curados},
+    xmin=0, xmax=100,
+    ymin=0, ymax=2,
+    xtick={0,20,40,60,80,100},
+    ytick={0,1,2},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+\addplot table [x=Tiempo, y=Curados, col sep=comma] {simulacionPrint.csv};
+\end{axis}
+\end{tikzpicture}
+
+\section{Grafico de Agentes Muertos}
+\begin{tikzpicture}
+\begin{axis}[
+    width=1\textwidth,
+    height=1\textwidth,
+    title={Agentes Muertos},
+    xlabel={Tiempo en segundos},
+    ylabel={Cantidad de Agentes Muertos},
+    xmin=0, xmax=100,
+    ymin=0, ymax=2,
+    xtick={0,20,40,60,80,100},
+    ytick={0,1,2},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+\addplot table [x=Tiempo, y=Muertos, col sep=comma] {simulacionPrint.csv};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
