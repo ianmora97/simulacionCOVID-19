@@ -292,10 +292,6 @@ void* moverAgente(void* agente) {
                 }
                 pthread_mutex_unlock(&ag->mapa->mapa_pos_mutex[ant_x][ant_y]);
             }
-
-
-
-
         }
         usleep(500000 * 10 / ag->vel);
         dibujarMapa(ag->mapa);

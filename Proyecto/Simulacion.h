@@ -26,7 +26,7 @@ double matriz[4][4];
 
 void crearSimulacion(int,int,double m_pro[4][4],int p_muerte, int t_curarse,int t_morir,bool recontagio);
 void crearParedes(int, int*);
-void run(int time);
+void *imprimirReporte(void* arg);
 void crearAgentes(int,int,int,int, int*,int*,int*,char*);
 #endif /* SIMULACION_H */
 

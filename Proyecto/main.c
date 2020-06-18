@@ -34,7 +34,10 @@ void* cleanS() {
 }
 
 int main(int argc, char** argv) {
-
+    int tiempo=60;
+    if(argc == 1){
+        tiempo = (int)argv[0]; 
+    }
     srand(time(0));
     int f, c, cant_paredes, cont = 0;
     int *v,*ca,*ta,*vel;
@@ -113,7 +116,7 @@ int main(int argc, char** argv) {
     fclose(fichero);
 
     printf("%i, %i, %i, %i ",cont_grupos,cont_tipos,cont_vel,cont_estados);
-    
+
     initscr();
     start_color();
     init_pair(1, 10, COLOR_BLACK); //sano
@@ -153,7 +156,8 @@ int main(int argc, char** argv) {
     pthread_create(&clear_t, NULL, cleanS, NULL);
     pthread_t pCh;
     pthread_create(&pCh,NULL,printChart,(void*)par);
-    
+    pthread_t reporte;
+    pthread_create(&reporte,NULL,imprimirReporte,tiempo);
     
     crearSimulacion(f, c,matrizContagio,p_muerte,segundosCurarse,segundosMorir,(bool)reContagio);
     crearAgentes(cont_grupos, cont_tipos, cont_vel, cont_estados,ca,ta,vel,es);
@@ -162,6 +166,7 @@ int main(int argc, char** argv) {
     pthread_join(update, NULL);
     pthread_join(clear_t, NULL);
     pthread_join(pCh, NULL);
+    pthread_join(reporte,NULL);
     getch();
     endwin();
     return (EXIT_SUCCESS);
